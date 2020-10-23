@@ -42,9 +42,9 @@ class FPG:
         return self.clean_dataset
     
     def display_info(self) -> None:
-        print("Initial dataset (minimum support = {}):".format(self.minimum_support), *self.initial_dataset, sep='\n')
-        print("Support:", *{list(k)[0]:v for k,v in self.support.items()}.items(), sep='\n')
-        print("Cleaned and sorted dataset:", *self.clean_dataset, sep='\n')
+        # print("Initial dataset (minimum support = {}):".format(self.minimum_support), *self.initial_dataset, sep='\n')
+        # print("Support:", *{list(k)[0]:v for k,v in self.support.items()}.items(), sep='\n')
+        # print("Cleaned and sorted dataset:", *self.clean_dataset, sep='\n')
         self.print_tree()
         print("Header Table:")
         # print(*self.header_table.items(), sep='\n')
