@@ -3,6 +3,9 @@ from datasets import test
 
 
 if __name__ == "__main__":
+
+    print("\nRunning example session...")
+    
     for k, v in test.items():
         fpg = FPG()
         print('\n',k)
@@ -12,3 +15,5 @@ if __name__ == "__main__":
         fpg.display_info()
         # fpg.print_tree()
         del fpg
+
+    print("\n\nEnd session...\n")
