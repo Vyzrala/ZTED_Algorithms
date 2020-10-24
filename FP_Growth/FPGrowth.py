@@ -28,7 +28,11 @@ class FPG:
     def __init__(self, min_support: int=2) -> None:
         self.minimum_support = min_support
         self.root_node = None
+        self.support = None
+        self.clean_dataset = None
         self.header_table: Dict[str, list] = {}
+        self.frequent_patterns = {}
+        self.conditional_pattern_base = {}
     
     def run(self, dataset: List[list]) -> Tuple[List[list], Dict[frozenset, int]]:
         self.initial_dataset = dataset
@@ -46,18 +50,23 @@ class FPG:
         # print("Support:", *{list(k)[0]:v for k,v in self.support.items()}.items(), sep='\n')
         # print("Cleaned and sorted dataset:", *self.clean_dataset, sep='\n')
         self.print_tree()
+        # print("Support table:")
+        # print(*self.support.items(), sep='\n')
         print("Header Table:")
-        # print(*self.header_table.items(), sep='\n')
-        for k, v in self.header_table.items():
-            print("Key: {} | Support = {} | Nodes: {}".format(k, v['support'], len(v['nodes'])))
-            # print("Key: {} | Support = {} | Nodes: [".format(k, v['support']), end='')
-            # for n in v['nodes']:
-            #     print(" {}".format(n.key), end="")
-            # print(" ]")
+        print(*self.header_table.items(), sep='\n')
 
-        print("Linked nodes:")
-        for v in self.header_table.values():
-            v['nodes'][0].display_linked()
+        # print("Linked nodes:")
+        # for v in self.header_table.values():
+        #     v['first_node'].display_linked()
+        print("Conditional pattern base:")
+        print(*self.conditional_pattern_base.items(), sep='\n')
+    
+    def print_tree(self) -> None:
+        try:
+            print("\nPrinting tree:\n")
+            self.root_node.display()
+        except:
+            print("\tNo root node.\n")
 
     def get_unique_items(self, wset: List[list]) -> List[set]:
         unique_items = list(set(sum(wset, [])))
@@ -98,38 +107,54 @@ class FPG:
     
     def build_tree(self, dataset: List[list]) -> None:
         self.root_node = Node('NULL', 0, None)
-        for k in self.support:
-            self.header_table[k] = {'support': self.support[k], 'nodes': []}
+        for k in self.support: 
+            self.header_table[k] = {'support': self.support[k], 'first_node': None}
 
         for transaction in dataset:
-            self.update_tree(transaction, self.root_node)
+            self.insert_transaction(transaction, self.root_node)
         
-        # Linking nodes
-        for v in self.header_table.values():
-            if len(v['nodes']) > 1:
-                for i in range(len(v['nodes'])-1):
-                    v['nodes'][i].link = v['nodes'][i+1]
-
-    def update_tree(self, transaction: List[str], node: Node) -> None:
+    def insert_transaction(self, transaction: List[str], node: Node) -> None:
         key = transaction[0]
         if key in node.childs.keys():
             node.childs[key].counter += 1
         else:
             node.childs[key] = Node(key, 1, node)
-            self.header_table[key]['nodes'].append(node.childs[key])
-        if len(transaction) > 1:
-            self.update_tree(transaction[1:], node.childs[key])
- 
-    def get_nodes(self, token: str) -> List[Node]:
-        node_list = self.header_table.get(token, None)
-        if node_list:
-            return node_list.get('nodes', None)
-        return None
+            if self.header_table[key]['first_node'] is None:
+                self.header_table[key]['first_node'] = node.childs[key]
+            else:
+                tmp = self.header_table[key]['first_node']
+                while tmp.link: tmp = tmp.link
+                tmp.link = node.childs[key]
 
-    def print_tree(self) -> None:
-        try:
-            print("\nPrinting tree:\n")
-            self.root_node.display()
-        except:
-            print("\tNo root node.\n")
-    
+        if len(transaction) > 1:
+            self.insert_transaction(transaction[1:], node.childs[key])
+
+    def generate_frequent_patterns(self) -> None:
+        for k, v in self.header_table.items():
+            self.conditional_pattern_base[k] = self.get_condidtional_pattern_base(k, v['first_node'])
+        
+    def get_condidtional_pattern_base(self, k: str, node: Node):
+        # print("nk = {}, np = {}".format(node.key, node.parent.key))
+        if node.parent is not self.root_node:
+            paths = self.traverse_side(node)
+            return paths
+            
+    def traverse_up(self, node: Node) -> list:  # Creates single path
+        path = []
+        cnt = node.counter
+        while node is not self.root_node:
+            path.append(node.key)
+            node = node.parent
+        
+        if len(path) > 1: 
+            return [path[1:], cnt]
+
+    def traverse_side(self, node: Node) -> list:  # Create all path for given node
+        paths = []
+        while node:
+            path = self.traverse_up(node)
+            if path is not None: 
+                path[0].sort()
+                paths.append(path)
+            node = node.link
+        return paths
