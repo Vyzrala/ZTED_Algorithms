@@ -131,7 +131,9 @@ class FPG:
 
     def generate_frequent_patterns(self) -> None:
         for k, v in self.header_table.items():
-            self.conditional_pattern_base[k] = self.get_condidtional_pattern_base(k, v['first_node'])
+            tmp = self.get_condidtional_pattern_base(k, v['first_node'])
+            self.conditional_pattern_base[k] = tmp
+            # self.header_table[k]['cpb'] = tmp
         
     def get_condidtional_pattern_base(self, k: str, node: Node):
         # print("nk = {}, np = {}".format(node.key, node.parent.key))
