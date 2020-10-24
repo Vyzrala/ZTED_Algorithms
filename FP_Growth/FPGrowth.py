@@ -99,7 +99,6 @@ class FPG:
     def build_tree(self, dataset: List[list]) -> None:
         self.root_node = Node('NULL', 0, None)
         for k in self.support:
-            # self.header_table[list(k)[0]] = [self.support[k], None]
             self.header_table[k] = {'support': self.support[k], 'nodes': []}
 
         for transaction in dataset:
@@ -113,7 +112,7 @@ class FPG:
 
     def update_tree(self, transaction: List[str], node: Node) -> None:
         key = transaction[0]
-        if key in node.childs:
+        if key in node.childs.keys():
             node.childs[key].counter += 1
         else:
             node.childs[key] = Node(key, 1, node)
