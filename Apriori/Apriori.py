@@ -35,8 +35,8 @@ class Apriori:
         L = None
         while C:
             L = self.get_L(wset, C, self.minimum_support)
-            # print("C{}: {} # = {}".format(k, list(map(set, C)), len(C)))
-            # print("L{}: {} # = {}\n".format(k, list(map(set, L)), len(L)))
+            print("C{}: {} # = {}".format(k, list(map(set, C)), len(C)))
+            print("L{}: {} # = {}\n".format(k, list(map(set, L)), len(L)))
             k += 1
             C = self.create_candidates(L, k)
         
