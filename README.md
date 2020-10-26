@@ -19,4 +19,5 @@ _It could be a little buggy_ :bug:
  - https://towardsdatascience.com/understand-and-build-fp-growth-algorithm-in-python-d8b989bab342
  - https://livebook.manning.com/book/machine-learning-in-action/chapter-12/1
  - https://www.mygreatlearning.com/blog/understanding-fp-growth-algorithm/
+ - https://www.softwaretestinghelp.com/fp-growth-algorithm-data-mining/
 <!---  - https://adataanalyst.com/machine-learning/fp-growth-algorithm-python-3/ --->

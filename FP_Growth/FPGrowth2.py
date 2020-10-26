@@ -35,6 +35,7 @@ class FPG:
             # Tree building
             self.root_node = Node(key='NULL', counter=0)
             for transaction, increment in self.support_dataset:
+                if increment > 1: print("INCREMENT", increment)
                 self.build_tree(transaction, self.root_node, increment)
             
             # Linking nodes
@@ -58,10 +59,10 @@ class FPG:
         mask = list(self.support_table.keys())
         
         clean_dataset = []
-        for transaction, i in self.support_dataset:
+        for transaction, i in dataset:
             tr = list(filter(lambda x: x in mask, transaction))
             tr.sort(key=lambda x: mask.index(x))
-            clean_dataset.append([tr, i])
+            clean_dataset.append((tr, i))
         self.support_dataset = clean_dataset
 
         # Header
@@ -87,13 +88,15 @@ class FPG:
             fis.append(new_fis)
 
             cpb = self.get_prefixes(key)
-            print(cpb)
+            self.conditional_patter_bases[key] = cpb
+
             sub_fpg = FPG(self.support_threshold)
             sub_fpg.create_tree(cpb)
-            sub_fpg.display()
-
+            
             if sub_fpg.header_table != {}:
                 sub_fpg.mine_tree(sub_fpg.header_table, new_fis, fis)
+
+        self.fis = fis
         
         # cpb = self.get_CPBes()
         # for key, dataset in cpb.items():
@@ -121,18 +124,17 @@ class FPG:
         return conditional_patter_bases
     
     def get_prefixes(self, key: str) -> List[list]:
-        # if self.header_table[key]['nodes'] != []:
-        if len(self.header_table[key]['nodes']) < 1: 
-            print(self.header_table[key], key)
-            return []
+        if len(self.header_table[key]['nodes']) < 1: return []
         node = self.header_table[key]['nodes'][0]
         cnt = node.counter
         paths = []
         while node:
             single_path = self.traverse_root(node)
             if len(single_path) > 1:
-                paths.append([single_path[1:], cnt])
+                paths.append((single_path[1:], cnt))
             node = node.link
+
+        self.conditional_patter_bases[key] = paths
         return paths
         # else:
         #     return []
@@ -169,6 +171,7 @@ class FPG:
         if self.header_table:
             print("Header table:")
             print(*self.header_table.items(), sep='\n')
+
         elif self.support_table:
             print("Support table:")
             print(*self.support_table.items(), sep='\n')
@@ -176,7 +179,9 @@ class FPG:
         if self.conditional_patter_bases:
             print("Conditional pattern bases (CPB):")
             print(*self.conditional_patter_bases.items(), sep='\n')
+            # print("Initial dataset")
+            # print(*self.support_dataset, sep='\n')
         
         if self.fis:
-            print("Frequnt item sets:")
-            print(*self.fis.items(), sep='\n')
+            print("Frequnt item sets: ({})".format(len(self.fis)))
+            print(*self.fis, sep='\n')

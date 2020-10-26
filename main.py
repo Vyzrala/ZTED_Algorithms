@@ -3,11 +3,12 @@ from FP_Growth.FPGrowth2 import FPG as FPG2
 from datasets import test
 
 for k, v in test.items():
+
     fpg2 = FPG2(2)
-    fpg2.create_tree(v[0])
+    fpg2.create_tree(fpg2.modify_dataset(v[0]))
     fis = []
-    fpg2.mine_tree(set([]), fis)
     fpg2.display()
+    fpg2.mine_tree(fpg2.header_table, set([]), fis)
 # for k, v in test.items():
 #     fpg = FPG()
 #     print('\n',k)
