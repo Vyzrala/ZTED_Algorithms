@@ -107,10 +107,10 @@ set8 = [
 test = {
     'set1':[set1, 2],
     'set2':[set2, 2],
-    # 'set3':[set3, 3],
-    # 'set4':[set4, 3],
-    # 'set5':[set5, 2],
-    # 'set6':[set6, 2],
-    # 'set7':[set7, 2],
-    # 'set8':[set8, 4],
+    'set3':[set3, 3],
+    'set4':[set4, 3],
+    'set5':[set5, 2],
+    'set6':[set6, 2],
+    'set7':[set7, 2],
+    'set8':[set8, 4],
 }

@@ -21,6 +21,5 @@ if __name__ == "__main__":
         print("\n", k)
         fpg2 = FPG2(2)
         fpg2.create_tree(fpg2.modify_dataset(v[0]))
-        fis = []
-        fpg2.mine_tree(fpg2.header_table, set([]), fis)
+        fpg2.mine_tree(set([]), [])
         fpg2.display()
