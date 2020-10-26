@@ -35,7 +35,6 @@ class FPG:
             # Tree building
             self.root_node = Node(key='NULL', counter=0)
             for transaction, increment in self.support_dataset:
-                if increment > 1: print("INCREMENT", increment)
                 self.build_tree(transaction, self.root_node, increment)
             
             # Linking nodes
@@ -70,6 +69,7 @@ class FPG:
             self.header_table[key] = {'support': self.support_table[key], 'nodes': []}
     
     def build_tree(self, transaction: List[str], node: Node, increment) -> Node:
+        if len(transaction) < 1: return
         key = transaction[0]
         if key in node.childs.keys():
             node.childs[key].counter += increment
@@ -92,7 +92,7 @@ class FPG:
 
             sub_fpg = FPG(self.support_threshold)
             sub_fpg.create_tree(cpb)
-            
+
             if sub_fpg.header_table != {}:
                 sub_fpg.mine_tree(sub_fpg.header_table, new_fis, fis)
 

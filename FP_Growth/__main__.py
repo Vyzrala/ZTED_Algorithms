@@ -18,7 +18,7 @@ if __name__ == "__main__":
     #     del fpg
 
     for k, v in test.items():
-
+        print("\n", k)
         fpg2 = FPG2(2)
         fpg2.create_tree(fpg2.modify_dataset(v[0]))
         fis = []
