@@ -32,7 +32,6 @@ class Node:
 
 class FPG:
     def __init__(self, min_support: int=2) -> None:
-        self.supp_set = False
         self.minimum_support = min_support
         self.root_node = None
         self.support = None
@@ -41,7 +40,7 @@ class FPG:
         self.conditional_pattern_base = {}
         self.fis = None
     
-    def run(self, dataset: List[list], supp_set: list=None) -> Tuple[List[list], Dict[frozenset, int]]:
+    def run(self, dataset: List[list]) -> Tuple[List[list], Dict[frozenset, int]]:
         self.initial_dataset = dataset
         wset = self.initial_dataset
         wset = [list(set(transaction)) for transaction in wset]  # Make sure that items in transaction are uniqe
@@ -169,31 +168,25 @@ class FPG:
         start_node = self.header_table[key]['nodes'][0]
         paths = self.get_prefix(start_node)
         dataset = []
-        supp_set = []
         for item in paths:
             dataset.append(item[0])
-            supp_set.append(item[1])
         self.conditional_pattern_base[key] = dataset
-        return dataset, supp_set
+        return dataset
     
-    def mine_fis(self, index, header_parent, prefix, fis):
+    def mine_fis(self, header_parent, prefix, fis):
         reverse_header_keys = list(header_parent.keys())[::-1]
         for key in reverse_header_keys:
             new_fis = prefix.copy()
             new_fis.add(key)
             fis.append(new_fis)
-            CPB, supp_set = self.get_CPB(key)
+            CPB = self.get_CPB(key)
 
             # Generate sub-tree
             tmp_fpg = FPG(self.minimum_support)
-            tmp_clean_dataset = tmp_fpg.run(CPB, supp_set)
+            tmp_clean_dataset = tmp_fpg.run(CPB)
             tmp_fpg.build_tree(tmp_clean_dataset)
-            # print("CPB:", CPB)
-            # print("SUPP SET:", supp_set)
-            # print("tmp supp:", tmp_fpg.support)
-            # print("\nStats for {} key".format(key))
-            # tmp_fpg.display_info()
+            
             if tmp_fpg.header_table != {}:
-                self.mine_fis(index+1, tmp_fpg.header_table, new_fis, fis)
+                self.mine_fis(tmp_fpg.header_table, new_fis, fis)
         
         self.fis = fis
