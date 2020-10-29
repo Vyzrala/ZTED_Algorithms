@@ -21,3 +21,8 @@ _It could be a little buggy_ :bug:
  - https://www.mygreatlearning.com/blog/understanding-fp-growth-algorithm/
  - https://www.softwaretestinghelp.com/fp-growth-algorithm-data-mining/
 <!---  - https://adataanalyst.com/machine-learning/fp-growth-algorithm-python-3/ --->
+
+# AprioriS
+
+#### Theroy:
+ - https://en.wikipedia.org/wiki/GSP_algorithm
