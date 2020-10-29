@@ -24,5 +24,5 @@ _It could be a little buggy_ :bug:
 
 # AprioriS
 
-#### Theroy:
+#### Theory:
  - https://en.wikipedia.org/wiki/GSP_algorithm
