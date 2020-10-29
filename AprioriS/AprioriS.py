@@ -1,6 +1,3 @@
-import AprioriS
-
-
 class AprioriS:
     def __init__(self, min_support: int) -> None:
         self.minimum_support  = min_support
@@ -50,6 +47,6 @@ class AprioriS:
                     tmp_key = ''.join(candidate)
                     counter = outfiltered_cands.get(tmp_key, [0])[0]
                     outfiltered_cands[tmp_key] = [counter + 1, candidate]
+        
         outfiltered_cands = dict(filter(lambda x:x[1][0]>=self.minimum_support, outfiltered_cands.items()))
-
         return [v for k, v in outfiltered_cands.values()]
