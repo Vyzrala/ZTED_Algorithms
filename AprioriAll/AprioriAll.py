@@ -1,4 +1,5 @@
-from typing import List, Dict
+from typing import List
+
 
 class AprioriAll:
     def __init__(self, threshold :int= 0.25) -> None:
@@ -11,7 +12,6 @@ class AprioriAll:
             key = row[0]
             ds[key] = ds.get(key, []) + [tuple(row[-1])]
         self.ds = ds
-        
         
         c = self.get_unique()
         k = 1
@@ -95,7 +95,6 @@ class AprioriAll:
             nds[k] = nseq
         return mapper, nds
     
-    
     def sequencing(self, ds):
         def eliminate(pair, seq):
             if len(seq) < len(pair): 
@@ -133,5 +132,4 @@ class AprioriAll:
     def unmap(self, sequences: List[tuple], mapper: dict) -> List[tuple]:
         unmapper = {v:k for k, v in mapper.items()}
         return [((unmapper.get(k[0], k[0]), unmapper.get(k[1], k[1])) , v) for k, v in sequences.items()]
-        
         
